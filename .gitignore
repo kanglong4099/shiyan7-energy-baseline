@@ -20,19 +20,6 @@ ENV/
 *.swo
 *~
 
-# 大文件和模型文件
-*.pkl
-models/**/*.pkl
-
-# 数据文件
-raw_data/
-processed_data/
-*.csv
-*.xlsx
-*.xls
-data/
-*.parquet
-
 # 日志文件
 logs/
 *.log
@@ -44,3 +31,12 @@ logs/
 # 系统文件
 .DS_Store
 Thumbs.db
+
+# 临时文件
+*.tmp
+*.bak
+*.swp
+*.sec.endpointdlp
+
+# 模型文件使用 Git LFS 管理（见 .gitattributes）
+# *.pkl 已在 .gitattributes 中配置
