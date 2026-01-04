@@ -1,0 +1,147 @@
+# 7#冷冻站项目配置
+# Energy Baseline Training Project Configuration
+
+project:
+  name: "shiyan7"
+  display_name: "7#冷冻站"
+  description: "冷冻站能耗基线模型"
+  created_date: "2025-12-30"
+  updated_date: "2025-01-04"
+  version: "3.0"
+
+# 数据路径配置
+paths:
+  project_root: "/home/long/energy_baseline_training/projects/shiyan7"
+  
+  raw_data:
+    bms: "raw_data/bms"
+    weather: "raw_data/weather"
+    assets: "raw_data/assets"
+  
+  processed_data: "processed_data"
+  
+  models:
+    advanced: "models/advanced"
+    metadata: "models/metadata"
+  
+  scripts: "scripts"
+  reports: "reports"
+  artifacts: "artifacts"
+  logs: "logs"
+
+# 模型配置
+model:
+  name: "ExtraTreesRegressor"
+  display_name: "极端随机森林"
+  model_file: "best_model_final.pkl"
+
+  # 最终模型使用的10个特征（去除所有可优化特征）
+  features:
+    - "hour"
+    - "temperature"
+    - "RH"
+    - "dew_point"
+    - "wet_bulb"
+    - "ssrd"
+    - "total_chiller_load"
+    - "load_group"
+    - "temp_ma3"
+    - "temp_x_rh"
+
+  target: "total_plant_power"
+
+  performance:
+    r2: 0.9897
+    rmse: 88.53
+    mae: 48.53
+    mape: 2.55
+
+  # 模型参数
+  n_estimators: 100
+  max_depth: null
+  min_samples_split: 2
+
+# 数据源配置
+data_sources:
+  bms:
+    files:
+      - "raw_data/bms/AESC_SHIYAN7_history_data_20250805.xlsx"
+    description: "BMS历史运行数据"
+  
+  weather:
+    files:
+      - "raw_data/weather/weather_SHIYAN_250101-250331.csv"
+      - "raw_data/weather/weather_SHIYAN_250401-250731.csv"
+    description: "天气数据（1-7月）"
+  
+  assets:
+    files:
+      - "raw_data/assets/1.设施台账.xlsx"
+    description: "设施台账"
+
+# 脚本配置
+scripts:
+  predict: "scripts/predict_advanced.py"
+
+# 能效参数
+energy_parameters:
+  design_power:
+    chiller: 500.0  # kW
+    total: 4000.0   # kW
+  
+  # 冷机额定制冷量配置
+  chiller_capacities:
+    CH1: 9845.0  # kW
+    CH2: 9845.0  # kW
+    CH3: 9845.0  # kW
+    CH4: 9845.0  # kW
+    CH5: 3517.0  # kW
+    total: 43052.0  # kW
+  
+  temperature_ranges:
+    outdoor: [-3, 40]  # °C
+    supply_water: [7, 12]  # °C
+    return_water: [12, 17]  # °C
+  
+  humidity_range: [10, 100]  # %
+  
+  delta_t_targets:
+    chilled_water: [5.0, 6.0]  # °C (优秀范围)
+    acceptable: [4.0, 7.0]  # °C (可接受范围)
+  
+  # 负荷分组阈值（基于四分位数）
+  load_group_thresholds:
+    group1_max: 6919.0      # kW
+    group2_max: 10512.0     # kW
+    group3_max: 13614.0     # kW
+
+# 预测配置
+prediction:
+  confidence_interval: 0.95
+  tolerance_percent: 10.0
+  auto_threshold: true
+
+# 输出配置
+output:
+  save_predictions: true
+  save_plots: true
+  save_reports: true
+  
+  format:
+    data: "csv"
+    reports: "txt"
+    plots: "png"
+
+# 日志配置
+logging:
+  enabled: true
+  level: "INFO"
+  log_file: "logs/prediction.log"
+  max_size_mb: 10
+  backup_count: 5
+
+# 联系信息
+contact:
+  project_manager: "待填写"
+  technical_support: "待填写"
+  email: "待填写"
